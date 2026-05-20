@@ -1,0 +1,114 @@
+hamming code :
+#include <stdio.h>
+#include <math.h>
+
+int main()
+{
+    int data[20], hamming[30];
+    int m, r = 0, i, j, k = 1, error = 0;
+
+    printf("Enter number of data bits: ");
+    scanf("%d", &m);
+
+    printf("Enter data bits:\n");
+    for(i = 1; i <= m; i++)
+    {
+        scanf("%d", &data[i]);
+    }
+
+    while((pow(2, r)) < (m + r + 1))
+    {
+        r++;
+    }
+
+    int total = m + r;
+
+    j = 1;
+
+    for(i = 1; i <= total; i++)
+    {
+        if(i == pow(2, j - 1))
+        {
+            hamming[i] = 0;
+            j++;
+        }
+        else
+        {
+            hamming[i] = data[k];
+            k++;
+        }
+    }
+
+    for(i = 0; i < r; i++)
+    {
+        int pos = pow(2, i);
+        int parity = 0;
+
+        for(j = 1; j <= total; j++)
+        {
+            if(j & pos)
+            {
+                parity = parity ^ hamming[j];
+            }
+        }
+
+        hamming[pos] = parity;
+    }
+
+    printf("\nGenerated Hamming Code:\n");
+    for(i = total; i >= 1; i--)
+    {
+        printf("%d ", hamming[i]);
+    }
+
+    printf("\n\nEnter received code bits:\n");
+
+    for(i = total; i >= 1; i--)
+    {
+        scanf("%d", &hamming[i]);
+    }
+
+    for(i = 0; i < r; i++)
+    {
+        int pos = pow(2, i);
+        int parity = 0;
+
+        for(j = 1; j <= total; j++)
+        {
+            if(j & pos)
+            {
+                parity = parity ^ hamming[j];
+            }
+        }
+
+        if(parity != 0)
+        {
+            error = error + pos;
+        }
+    }
+
+    if(error == 0)
+    {
+        printf("\nNo error detected\n");
+    }
+    else
+    {
+        printf("\nError detected at position %d\n", error);
+
+        if(hamming[error] == 0)
+            hamming[error] = 1;
+        else
+            hamming[error] = 0;
+
+        printf("Corrected Hamming Code:\n");
+
+        for(i = total; i >= 1; i--)
+        {
+            printf("%d ", hamming[i]);
+        }
+
+        printf("\n");
+    }
+
+    return 0;
+}

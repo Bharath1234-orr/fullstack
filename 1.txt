@@ -1,0 +1,48 @@
+Leaky bucket:
+#include <stdio.h>
+
+int main()
+{
+    int bucket_size, output_rate, n, packet_size;
+    int stored = 0;
+
+    printf("Enter Bucket Size: ");
+    scanf("%d", &bucket_size);
+
+    printf("Enter Output Rate: ");
+    scanf("%d", &output_rate);
+
+    printf("Enter Number of Packets: ");
+    scanf("%d", &n);
+
+    for(int i = 1; i <= n; i++)
+    {
+        printf("\nEnter size of packet %d: ", i);
+        scanf("%d", &packet_size);
+
+        if((stored + packet_size) <= bucket_size)
+        {
+            stored = stored + packet_size;
+            printf("Packet %d accepted\n", i);
+        }
+        else
+        {
+            printf("Packet %d discarded (Bucket Overflow)\n", i);
+        }
+
+        printf("Before leaking, bucket content = %d\n", stored);
+
+        if(stored >= output_rate)
+        {
+            stored = stored - output_rate;
+        }
+        else
+        {
+            stored = 0;
+        }
+
+        printf("After leaking, bucket content = %d\n", stored);
+    }
+
+    return 0;
+}

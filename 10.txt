@@ -1,0 +1,80 @@
+Dijkstra
+#include <stdio.h>
+
+#define MAX 10
+#define INF 9999
+
+int main()
+{
+    int graph[MAX][MAX];
+    int dist[MAX], visited[MAX];
+    int V, source;
+    int i, j, count, min, next;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &V);
+
+    printf("Enter adjacency matrix:\n");
+
+    for(i = 0; i < V; i++)
+    {
+        for(j = 0; j < V; j++)
+        {
+            scanf("%d", &graph[i][j]);
+
+            // Replace 0 with INF except diagonal
+            if(i != j && graph[i][j] == 0)
+            {
+                graph[i][j] = INF;
+            }
+        }
+    }
+
+    printf("Enter source vertex: ");
+    scanf("%d", &source);
+
+    // Initialize arrays
+    for(i = 0; i < V; i++)
+    {
+        dist[i] = graph[source][i];
+        visited[i] = 0;
+    }
+
+    dist[source] = 0;
+    visited[source] = 1;
+
+    // Dijkstra Algorithm
+    for(count = 1; count < V - 1; count++)
+    {
+        min = INF;
+
+        for(i = 0; i < V; i++)
+        {
+            if(dist[i] < min && !visited[i])
+            {
+                min = dist[i];
+                next = i;
+            }
+        }
+
+        visited[next] = 1;
+
+        for(i = 0; i < V; i++)
+        {
+            if(!visited[i] &&
+               min + graph[next][i] < dist[i])
+            {
+                dist[i] = min + graph[next][i];
+            }
+        }
+    }
+
+    printf("\nShortest distances from source vertex %d:\n", source);
+
+    for(i = 0; i < V; i++)
+    {
+        printf("Vertex %d -> Distance = %d\n", i, dist[i]);
+    }
+
+    return 0;
+}

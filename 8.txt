@@ -1,0 +1,97 @@
+CRC_CCITT
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    char data[100], divisor[] = "10001000000100001";
+    char temp[120], received[120];
+    int data_len, divisor_len, i, j, error = 0;
+
+    printf("Enter binary data: ");
+    scanf("%s", data);
+
+    data_len = strlen(data);
+    divisor_len = strlen(divisor);
+
+    strcpy(temp, data);
+
+    // Append 16 zeros
+    for(i = 0; i < divisor_len - 1; i++)
+    {
+        temp[data_len + i] = '0';
+    }
+
+    temp[data_len + divisor_len - 1] = '\0';
+
+    // CRC Generation
+    for(i = 0; i < data_len; i++)
+    {
+        if(temp[i] == '1')
+        {
+            for(j = 0; j < divisor_len; j++)
+            {
+                if(temp[i + j] == divisor[j])
+                    temp[i + j] = '0';
+                else
+                    temp[i + j] = '1';
+            }
+        }
+    }
+
+    printf("\nCRC Bits: ");
+    for(i = data_len; i < data_len + divisor_len - 1; i++)
+    {
+        printf("%c", temp[i]);
+    }
+
+    printf("\n");
+
+    // Create transmitted data
+    strcpy(received, data);
+
+    for(i = data_len; i < data_len + divisor_len - 1; i++)
+    {
+        received[i] = temp[i];
+    }
+
+    received[data_len + divisor_len - 1] = '\0';
+
+    printf("Transmitted Data: %s\n", received);
+
+    // Receiver Side
+    printf("\nEnter received data: ");
+    scanf("%s", received);
+
+    // CRC Checking
+    for(i = 0; i <= strlen(received) - divisor_len; i++)
+    {
+        if(received[i] == '1')
+        {
+            for(j = 0; j < divisor_len; j++)
+            {
+                if(received[i + j] == divisor[j])
+                    received[i + j] = '0';
+                else
+                    received[i + j] = '1';
+            }
+        }
+    }
+
+    // Check remainder
+    for(i = strlen(received) - divisor_len + 1; i < strlen(received); i++)
+    {
+        if(received[i] == '1')
+        {
+            error = 1;
+            break;
+        }
+    }
+
+    if(error == 1)
+        printf("\nError Detected in received data\n");
+    else
+        printf("\nNo Error Detected\n");
+
+    return 0;
+}
