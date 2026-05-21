@@ -1,0 +1,75 @@
+2b
+#include<stdio.h>
+
+#define max 100
+#define inf 99999
+
+int graph[max][max], n;
+
+void prims(){
+
+    int visited[max];
+
+    for(int i = 0; i < n; i++)
+        visited[i] = 0;
+
+    visited[0] = 1;
+
+    int edges = 0;
+    int mincost = 0;
+
+    printf("Edges in MST:\n");
+
+    while(edges < n - 1){
+
+        int min = inf;
+        int a = -1, b = -1;
+
+        for(int i = 0; i < n; i++){
+
+            if(visited[i]){
+
+                for(int j = 0; j < n; j++){
+
+                    if(!visited[j] &&
+                       graph[i][j] &&
+                       graph[i][j] < min){
+
+                        min = graph[i][j];
+
+                        a = i;
+                        b = j;
+                    }
+                }
+            }
+        }
+
+        printf("%d -> %d : %d\n", a, b, min);
+
+        mincost += min;
+
+        visited[b] = 1;
+
+        edges++;
+    }
+
+    printf("\nMinimum Cost = %d", mincost);
+}
+
+int main(){
+
+    printf("Enter number of cities: ");
+    scanf("%d", &n);
+
+    printf("Enter cost adjacency matrix:\n");
+
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    prims();
+
+    return 0;
+}

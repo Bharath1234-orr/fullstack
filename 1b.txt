@@ -1,0 +1,79 @@
+1b
+#include<stdio.h>
+
+#define max 100
+#define inf 99999
+
+int graph[max][max], visited[max], n;
+
+void tsp(int start){
+
+    int current = start;
+    int cost = 0;
+
+    visited[current] = 1;
+
+    printf("\nRoute:\n");
+
+    printf("%d ", current);
+
+    for(int count = 1; count < n; count++){
+
+        int min = inf;
+        int next = -1;
+
+        // Find nearest unvisited location
+        for(int i = 0; i < n; i++){
+
+            if(!visited[i] &&
+               graph[current][i] != 0 &&
+               graph[current][i] < min){
+
+                min = graph[current][i];
+                next = i;
+            }
+        }
+
+        visited[next] = 1;
+
+        printf("-> %d ", next);
+
+        cost += min;
+
+        current = next;
+    }
+
+    // Return to starting location
+    cost += graph[current][start];
+
+    printf("-> %d", start);
+
+    printf("\n\nMinimum Cost = %d", cost);
+}
+
+int main(){
+
+    int start;
+
+    printf("Enter number of locations: ");
+    scanf("%d", &n);
+
+    printf("Enter distance matrix:\n");
+
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    for(int i = 0; i < n; i++){
+        visited[i] = 0;
+    }
+
+    printf("Enter starting location: ");
+    scanf("%d", &start);
+
+    tsp(start);
+
+    return 0;
+}

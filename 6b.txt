@@ -1,0 +1,91 @@
+6b
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+#define max 100
+
+void quicksort(int a[], int low, int high);
+
+int partition(int a[], int low, int high){
+
+    int pivot = a[low];
+
+    int i = low + 1;
+    int j = high;
+
+    int temp;
+
+    while(i <= j){
+
+        while(i <= high && a[i] <= pivot)
+            i++;
+
+        while(a[j] > pivot)
+            j--;
+
+        if(i < j){
+
+            temp = a[i];
+            a[i] = a[j];
+            a[j] = temp;
+        }
+    }
+
+    temp = a[low];
+    a[low] = a[j];
+    a[j] = temp;
+
+    return j;
+}
+
+void quicksort(int a[], int low, int high){
+
+    if(low < high){
+
+        int p = partition(a, low, high);
+
+        quicksort(a, low, p - 1);
+
+        quicksort(a, p + 1, high);
+    }
+}
+
+int main(){
+
+    int a[max], n;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    srand(time(0));
+
+    printf("\nRandom numbers:\n");
+
+    for(int i = 0; i < n; i++){
+
+        a[i] = rand() % 100;
+
+        printf("%d ", a[i]);
+    }
+
+    clock_t start = clock();
+
+    quicksort(a, 0, n - 1);
+
+    clock_t end = clock();
+
+    printf("\n\nSorted array:\n");
+
+    for(int i = 0; i < n; i++){
+        printf("%d ", a[i]);
+    }
+
+    double time_taken =
+    (double)(end - start) / CLOCKS_PER_SEC;
+
+    printf("\n\nExecution Time = %lf seconds",
+           time_taken);
+
+    return 0;
+}
